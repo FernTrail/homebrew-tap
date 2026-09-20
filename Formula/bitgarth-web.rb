@@ -54,9 +54,16 @@ class BitgarthWeb < Formula
       Open http://127.0.0.1:8080 after starting the server.
       Data is stored in #{var}/bitgarth and is preserved across upgrades.
       BITGARTH_PROJECT_DIR (absolute path), IP and PORT can override the defaults
-      when running bitgarth-web directly. It listens on localhost by default.
+      when running bitgarth-web directly.
+
+      By default, the server listens on localhost and is only accessible from
+      this computer. To listen on all IPv4 network interfaces, run:
+        IP=0.0.0.0 bitgarth-web
+      Other devices can then connect to http://<server-ip>:8080, subject to
+      your firewall rules.
 
       Stop the server and back up the entire data directory before upgrading.
+      Homebrew services do not automatically inherit your shell's environment.
       See https://github.com/FernTrail/homebrew-tap#server-configuration for
       background-service configuration and access from another computer.
     EOS
