@@ -37,11 +37,14 @@ class BitgarthCli < Formula
 
   def caveats
     <<~EOS
+      This package installs the client only. It pairs with an existing BitGarth
+      server on this computer or another machine.
+
+      You can install a server using Homebrew (bitgarth-web), Umbrel, Docker,
+      or other methods listed at https://bitgarth.app/#install
+
       Pair with your BitGarth server:
         bitgarth pair https://your-bitgarth.example.com/
-
-      This package installs the client only. Install bitgarth-web separately
-      if you also want to run a server on this computer.
     EOS
   end
 
