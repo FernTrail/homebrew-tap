@@ -65,24 +65,122 @@ interfaces. Use HTTPS through a reverse proxy for remote access. Review the
 and [security documentation](https://github.com/BitGarth/bitgarth/blob/main/docs/user/security.md)
 before exposing the server.
 
-To run the server in the background with its defaults:
-
-```sh
-brew services start ferntrail/tap/bitgarth-web
-brew services stop ferntrail/tap/bitgarth-web
-```
-
-Run these as your normal user. Homebrew registers a user service; on macOS it
-starts at login. Logs go to `$(brew --prefix)/var/log/bitgarth-web.log`.
-Services do not automatically inherit variables from your interactive shell.
-For custom service settings, use your own launchd/systemd service definition
-that sets the environment and runs `$(brew --prefix)/bin/bitgarth-web`.
-
 Both package launchers set `BITGARTH_CHANNEL=homebrew` for their own process.
 The web server already reads this value. The v0.4.0 CLI does not yet read or
 report it; the variable is available for future CLI support. A client's channel
 does not change its paired server's channel. Directly executing the internal
 binary instead of the installed launcher bypasses these package settings.
+
+## Starting and stopping the server
+
+Installing `bitgarth-web` does not start it or enable automatic startup. Choose
+one of the following modes; do not run multiple instances against the same
+data directory or port.
+
+| Command | Behavior |
+| --- | --- |
+| `bitgarth-web` | Runs in the foreground; stop it with Ctrl+C. |
+| `brew services run ferntrail/tap/bitgarth-web` | Runs in the background without registering automatic startup. |
+| `brew services start ferntrail/tap/bitgarth-web` | Starts immediately in the background and registers startup at user login. |
+| `brew services stop ferntrail/tap/bitgarth-web` | Stops the background service and disables its automatic startup. |
+
+Run these Homebrew commands as your normal user. Homebrew uses launchd on macOS
+and systemd on Linux. The service manager keeps the server running and restarts
+it if it exits. Logs go to `$(brew --prefix)/var/log/bitgarth-web.log`.
+
+Check status or restart after changing settings:
+
+```sh
+brew services info ferntrail/tap/bitgarth-web
+brew services restart ferntrail/tap/bitgarth-web
+```
+
+`restart` also registers automatic startup. Use `stop` followed by `run` if
+you want to restart a background instance without enabling startup at login.
+
+### User-service settings: `bitgarth-web.env`
+
+Background services do not automatically inherit your interactive shell's
+environment. Current Homebrew supports a per-service environment file at
+`~/.homebrew/services/bitgarth-web.env`, or
+`$HOMEBREW_USER_CONFIG_HOME/services/bitgarth-web.env` if that variable is set.
+
+Create its directory:
+
+```sh
+mkdir -p "${HOMEBREW_USER_CONFIG_HOME:-$HOME/.homebrew}/services"
+```
+
+Create `bitgarth-web.env` in that directory. For example, to make the server
+accessible on all IPv4 network interfaces:
+
+```ini
+IP=0.0.0.0
+PORT=8080
+# Optional: use an absolute path to your persistent data directory.
+# BITGARTH_PROJECT_DIR=/absolute/path/to/bitgarth-data
+```
+
+Use one `KEY=value` per line. Blank lines and lines beginning with `#` are
+ignored. Values are literal: do not use `export`, surrounding quotes, `~`,
+`$HOME`, or command substitutions. Omit settings to keep the package defaults.
+Changing `BITGARTH_PROJECT_DIR` selects a different data directory; it does not
+move your existing data.
+
+Restrict access to the file, then apply the settings:
+
+```sh
+chmod 600 "${HOMEBREW_USER_CONFIG_HOME:-$HOME/.homebrew}/services/bitgarth-web.env"
+brew services restart ferntrail/tap/bitgarth-web
+```
+
+Homebrew ignores group- or world-writable environment files. Settings persist
+across package upgrades. The file applies to Homebrew user services, not direct
+`bitgarth-web` invocations or services managed with `sudo`. The launcher always
+sets `BITGARTH_CHANNEL=homebrew`, regardless of this file.
+
+### Start at boot without logging in
+
+**Linux with systemd:** keep the service running as your normal user and enable
+lingering for that account:
+
+```sh
+sudo loginctl enable-linger "$(id -un)"
+brew services start ferntrail/tap/bitgarth-web
+```
+
+The user service manager then starts at boot and remains active after logout.
+This preserves support for `bitgarth-web.env`. Lingering applies to the whole
+user account, not just BitGarth; `sudo loginctl disable-linger "$(id -un)"`
+reverses it.
+
+**macOS:** stop any user service, then register a boot service that runs as your
+normal account:
+
+```sh
+brew services stop ferntrail/tap/bitgarth-web
+sudo "$(command -v brew)" services start ferntrail/tap/bitgarth-web --sudo-service-user="$(id -un)"
+```
+
+The selected account must be able to read the installed package and write to
+the data and log directories. Manage this boot service with `sudo` thereafter,
+including when stopping it before an upgrade or uninstalling it. For example:
+
+```sh
+sudo "$(command -v brew)" services stop ferntrail/tap/bitgarth-web
+```
+
+Homebrew skips user environment files when invoked as root, including with
+`--sudo-service-user`. This boot-service example therefore uses the package
+defaults, including localhost-only access. For custom boot-service settings on
+macOS, use a launchd definition with explicit environment variables and the
+installed `bitgarth-web` launcher; Homebrew accepts a custom service definition
+with `--file`. On Linux, `sudo brew services start` is also a system-service
+option, but a user service with lingering avoids running BitGarth as root.
+
+See the [Homebrew services reference](https://docs.brew.sh/Manpage#services-subcommand),
+[Homebrew's environment-file handling](https://github.com/Homebrew/brew/blob/7.0.4/Library/Homebrew/service.rb),
+and [systemd's lingering documentation](https://www.freedesktop.org/software/systemd/man/latest/loginctl.html).
 
 ## Updates and removal
 
@@ -100,6 +198,10 @@ brew services stop ferntrail/tap/bitgarth-web
 brew upgrade ferntrail/tap/bitgarth-web
 brew services start ferntrail/tap/bitgarth-web
 ```
+
+These commands assume a user service. For a macOS boot service, use the `sudo`
+stop/start commands above, keeping the same service account. Stop a foreground
+instance with Ctrl+C before upgrading it.
 
 The data directory survives package upgrades and uninstallation. Remove it
 separately only if you intend to delete your instance. To uninstall the server,
