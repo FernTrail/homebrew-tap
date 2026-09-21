@@ -31,6 +31,33 @@ personal computer. Neither package depends on the other.
 | `bitgarth-cli` | `bitgarth` | Client paired with a BitGarth server |
 | `bitgarth-web` | `bitgarth-web` | Server and its browser assets |
 
+### Tap trust and package discovery
+
+Homebrew 6 and newer distinguish adding a tap from trusting its executable
+package definitions. `brew tap ferntrail/tap` adds the repository but does not
+trust it. A subsequent `brew search bitgarth` can therefore fail with
+"Refusing to load formula ... from untrusted tap".
+
+To browse both BitGarth packages without installing them, trust the formulae:
+
+```sh
+brew trust --formula ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web
+brew search bitgarth
+```
+
+Alternatively, to trust FernTrail's entire tap, including all current and future
+formulae, casks and external commands:
+
+```sh
+brew trust ferntrail/tap
+brew search bitgarth
+```
+
+The fully qualified `brew install ferntrail/tap/bitgarth-cli` and
+`brew install ferntrail/tap/bitgarth-web` commands above automatically trust
+only the package being installed. Installing the CLI alone does not trust the
+web formula. See [Homebrew's tap trust documentation](https://docs.brew.sh/Tap-Trust).
+
 ## Supported platforms
 
 - macOS on Apple Silicon (the binaries target macOS 11 or newer; Homebrew's
