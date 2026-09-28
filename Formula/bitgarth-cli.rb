@@ -4,11 +4,11 @@ class BitgarthCli < Formula
   license "FSL-1.1-ALv2"
 
   if OS.mac?
-    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.2/bitgarth-cli-v0.4.2-macos-aarch64.tar.gz"
-    sha256 "ebb69e7ad882b1b611e6b2bd772b39f4124aee1d203f3f1efa98e5bce6235f88"
+    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.3/bitgarth-cli-v0.4.3-macos-aarch64.tar.gz"
+    sha256 "87f4172e9ffc035bdfe6bdfcd0bb7e1b7d6555a68d905bd0a0e11242563b4da6"
   else
-    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.2/bitgarth-cli-v0.4.2-linux-x86_64-gnu.tar.gz"
-    sha256 "8886e2f8e1db00d65a430e1e87e9d86746f83f97d9426461d5f4ddfc524e6433"
+    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.3/bitgarth-cli-v0.4.3-linux-x86_64-gnu.tar.gz"
+    sha256 "fedbe9af8e075817a80463365fd3b898dc94f1c813d3e5ecb161e91316ad18b5"
   end
 
   on_macos do
@@ -20,7 +20,7 @@ class BitgarthCli < Formula
   end
 
   resource "license" do
-    url "https://raw.githubusercontent.com/BitGarth/bitgarth/v0.4.2/LICENSE.md"
+    url "https://raw.githubusercontent.com/BitGarth/bitgarth/v0.4.3/LICENSE.md"
     sha256 "161272734def5be60c44b744fe5a57f27cc1743a87c707042a3d83184d847a39"
   end
 
