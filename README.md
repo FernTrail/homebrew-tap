@@ -261,8 +261,8 @@ CI runs on Apple Silicon macOS and Ubuntu 24.04 x86-64.
 
 ## License and support
 
-BitGarth retains its [FSL-1.1-ALv2 license](https://github.com/BitGarth/bitgarth/blob/main/LICENSE.md).
-Each formula installs the license from the corresponding release tag.
+BitGarth is licensed under the [GNU Affero General Public License, version 3 only](https://github.com/BitGarth/bitgarth/blob/main/LICENSE.md)
+(`AGPL-3.0-only`). Each formula installs the license from the corresponding release tag.
 
 Use this repository's issues for packaging problems. Application information
 and support are at [bitgarth.app](https://bitgarth.app/).
