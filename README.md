@@ -4,36 +4,80 @@ Homebrew packages for BitGarth and hledger-flow, maintained by [FernTrail](https
 
 ## Install
 
+| Package | Command | Purpose |
+| --- | --- | --- |
+| [BitGarth CLI](#bitgarth-cli) | `bitgarth` | Pair with an existing BitGarth server |
+| [BitGarth web server](#bitgarth-web-server) | `bitgarth-web` | Run your own BitGarth server and browser interface |
+| [hledger-flow](#hledger-flow) | `hledger-flow` | Import bank statements and generate hledger reports |
+
+### First-time setup
+
+Check the [supported platforms](#supported-platforms) for your package.
+Run `brew --version` in your terminal. If the command is missing, [install
+Homebrew](https://brew.sh/) and follow the installer’s instructions for adding
+`brew` to your shell’s `PATH`.
+
+Add FernTrail’s package repository (called a *tap*):
+
 ```sh
 brew tap ferntrail/tap
-brew install ferntrail/tap/bitgarth-cli
 ```
 
-The CLI provides the `bitgarth` command. Pair it with an existing server:
+Then choose a package below. Each install command uses the full package name,
+so Homebrew can also add the tap automatically and trust just that package.
+If you added the tap previously and a new package is missing, run `brew update`.
+
+#### Optional: inspect a package before installing
+
+On Homebrew 6 or newer, tapping makes the package definitions available.
+To let Homebrew load one for inspection, trust that formula explicitly. For
+example, to inspect hledger-flow:
+
+```sh
+brew trust --formula ferntrail/tap/hledger-flow
+brew info ferntrail/tap/hledger-flow
+```
+
+For BitGarth, use `ferntrail/tap/bitgarth-cli` or `ferntrail/tap/bitgarth-web`
+in both commands. A fully qualified install grants formula trust automatically,
+so you can skip this step if you’re ready to install. If you want to trust
+*all current and future* formulae, casks and external commands from FernTrail,
+use `brew trust --tap ferntrail/tap`. [Homebrew tap trust guide](https://docs.brew.sh/Tap-Trust)
+
+### BitGarth CLI
+
+```sh
+brew install ferntrail/tap/bitgarth-cli
+bitgarth --version
+```
+
+Pair the client with your server, substituting its URL:
 
 ```sh
 bitgarth pair https://your-bitgarth.example.com/
 ```
 
-To run your own BitGarth server, install the separate web package:
+### BitGarth web server
 
 ```sh
 brew install ferntrail/tap/bitgarth-web
 bitgarth-web
 ```
 
-Open <http://127.0.0.1:8080> in your browser. You can install both packages on
-the same computer, or install the server on a home server and the CLI on your
-personal computer. Neither package depends on the other.
+Open <http://127.0.0.1:8080> in your browser. The client and server can run
+on the same computer or on separate machines. Install whichever you need.
 
-To import bank statements with hledger-flow, install it together with its
-`hledger` dependency:
+### hledger-flow
+
+Homebrew installs the prebuilt [hledger-flow release binary](https://github.com/apauley/hledger-flow/releases)
+for your platform and installs `hledger` by default:
 
 ```sh
 brew install ferntrail/tap/hledger-flow
+hledger-flow --version
 ```
 
-If you manage `hledger` separately, install hledger-flow with:
+If you don’t want Homebrew to install `hledger`, use this install command instead:
 
 ```sh
 brew install ferntrail/tap/hledger-flow --without-hledger
@@ -41,39 +85,6 @@ brew install ferntrail/tap/hledger-flow --without-hledger
 
 Imports and reports use the first `hledger` on your `PATH`. To choose a specific
 executable, run `hledger-flow --hledger-path /absolute/path/to/hledger import`.
-
-| Package | Command | Purpose |
-| --- | --- | --- |
-| `bitgarth-cli` | `bitgarth` | Client paired with a BitGarth server |
-| `bitgarth-web` | `bitgarth-web` | Server and its browser assets |
-| `hledger-flow` | `hledger-flow` | Import bank statements and generate hledger reports |
-
-### Tap trust and package discovery
-
-Homebrew 6 and newer distinguish adding a tap from trusting its executable
-package definitions. `brew tap ferntrail/tap` adds the repository but does not
-trust it. A subsequent `brew search bitgarth` can therefore fail with
-"Refusing to load formula ... from untrusted tap".
-
-To browse both BitGarth packages without installing them, trust the formulae:
-
-```sh
-brew trust --formula ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web
-brew search bitgarth
-```
-
-Alternatively, to trust FernTrail's entire tap, including all current and future
-formulae, casks and external commands:
-
-```sh
-brew trust ferntrail/tap
-brew search bitgarth
-```
-
-The fully qualified `brew install ferntrail/tap/bitgarth-cli` and
-`brew install ferntrail/tap/bitgarth-web` commands above automatically trust
-only the package being installed. Installing the CLI alone does not trust the
-web formula. See [Homebrew's tap trust documentation](https://docs.brew.sh/Tap-Trust).
 
 ## Supported platforms
 
@@ -88,8 +99,7 @@ Linux on ARM64 or x86-64 (system glibc 2.34 or newer).
 - Linux on x86-64 with **system glibc 2.39 or newer**, such as Ubuntu 24.04.
   The server also installs Homebrew's OpenSSL 3 dependency.
 
-The current releases do not include Intel Mac or ARM Linux binaries. These
-formulae install the existing, checksum-verified
+The BitGarth formulae install checksum-verified
 [BitGarth release archives](https://github.com/BitGarth/bitgarth/releases).
 The macOS binaries are signed and notarized by FernTrail B.V.
 
@@ -115,11 +125,7 @@ interfaces. Use HTTPS through a reverse proxy for remote access. Review the
 and [security documentation](https://github.com/BitGarth/bitgarth/blob/main/docs/user/security.md)
 before exposing the server.
 
-Both package launchers set `BITGARTH_CHANNEL=homebrew` for their own process.
-The web server already reads this value. The v0.4.0 CLI does not yet read or
-report it; the variable is available for future CLI support. A client's channel
-does not change its paired server's channel. Directly executing the internal
-binary instead of the installed launcher bypasses these package settings.
+Both BitGarth launchers set `BITGARTH_CHANNEL=homebrew` for their own process.
 
 ## Starting and stopping the server
 
@@ -239,6 +245,9 @@ brew update
 brew upgrade ferntrail/tap/bitgarth-cli
 ```
 
+To upgrade hledger-flow, run `brew update` and `brew upgrade ferntrail/tap/hledger-flow`.
+To remove it, run `brew uninstall ferntrail/tap/hledger-flow`.
+
 Before upgrading the server, stop it and back up its **entire data directory**,
 including session secrets and SQLite WAL files. Then upgrade and restart:
 
@@ -269,15 +278,17 @@ values from the published `SHA256SUMS`, and the tag in its license resource URL.
 Update the license resource checksum if the license file changed. Never
 substitute an archive without updating its checksum.
 
-For a new hledger-flow release, update the version and all four archive
-checksums in its formula. Verify the platform requirements and license checksum
-against the new release.
+For a new hledger-flow release, follow the [upstream release procedure](https://github.com/apauley/hledger-flow/blob/master/release-procedure.md).
+Check any platform requirement changes during release review. The upstream
+`bin/release publish` command updates the formula’s tag, four archive checksums,
+and license checksum, then pushes the update and waits for this tap’s CI.
 
 Run the same checks as CI:
 
 ```sh
 brew style Formula/*.rb
 brew install ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web ferntrail/tap/hledger-flow
+brew audit --strict ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web ferntrail/tap/hledger-flow
 brew test ferntrail/tap/bitgarth-cli
 brew test ferntrail/tap/bitgarth-web
 brew test ferntrail/tap/hledger-flow
@@ -292,5 +303,5 @@ CI runs on Apple Silicon macOS and Ubuntu 24.04 x86-64.
 BitGarth is licensed under the [GNU Affero General Public License, version 3 only](https://github.com/BitGarth/bitgarth/blob/main/LICENSE.md)
 (`AGPL-3.0-only`). hledger-flow uses the [GNU General Public License, version 3](https://github.com/apauley/hledger-flow/blob/v0.17.0/LICENSE). Each formula installs the license from the corresponding release tag.
 
-Use this repository's issues for packaging problems. Application information
-and support are at [bitgarth.app](https://bitgarth.app/).
+Use this repository’s issues for packaging problems. For application help, see
+[BitGarth](https://bitgarth.app/) or the [hledger-flow quick-start guide](https://github.com/apauley/hledger-flow/blob/master/QUICKSTART.md).
