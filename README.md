@@ -1,6 +1,6 @@
 # FernTrail Homebrew tap
 
-Homebrew packages for applications published by [FernTrail](https://ferntrail.tech/).
+Homebrew packages for BitGarth and hledger-flow, maintained by [FernTrail](https://ferntrail.tech/).
 
 ## Install
 
@@ -26,10 +26,27 @@ Open <http://127.0.0.1:8080> in your browser. You can install both packages on
 the same computer, or install the server on a home server and the CLI on your
 personal computer. Neither package depends on the other.
 
+To import bank statements with hledger-flow, install it together with its
+`hledger` dependency:
+
+```sh
+brew install ferntrail/tap/hledger-flow
+```
+
+If you manage `hledger` separately, install hledger-flow with:
+
+```sh
+brew install ferntrail/tap/hledger-flow --without-hledger
+```
+
+Imports and reports use the first `hledger` on your `PATH`. To choose a specific
+executable, run `hledger-flow --hledger-path /absolute/path/to/hledger import`.
+
 | Package | Command | Purpose |
 | --- | --- | --- |
 | `bitgarth-cli` | `bitgarth` | Client paired with a BitGarth server |
 | `bitgarth-web` | `bitgarth-web` | Server and its browser assets |
+| `hledger-flow` | `hledger-flow` | Import bank statements and generate hledger reports |
 
 ### Tap trust and package discovery
 
@@ -59,6 +76,12 @@ only the package being installed. Installing the CLI alone does not trust the
 web formula. See [Homebrew's tap trust documentation](https://docs.brew.sh/Tap-Trust).
 
 ## Supported platforms
+
+**hledger-flow 0.17.0** installs the [upstream release binaries](https://github.com/apauley/hledger-flow/releases/tag/v0.17.0)
+for Apple Silicon (macOS 26 or newer), Intel Mac (macOS 15 or newer), and
+Linux on ARM64 or x86-64 (system glibc 2.34 or newer).
+
+**BitGarth** supports the following platforms:
 
 - macOS on Apple Silicon (the binaries target macOS 11 or newer; Homebrew's
   own operating-system support requirements also apply).
@@ -246,13 +269,18 @@ values from the published `SHA256SUMS`, and the tag in its license resource URL.
 Update the license resource checksum if the license file changed. Never
 substitute an archive without updating its checksum.
 
+For a new hledger-flow release, update the version and all four archive
+checksums in its formula. Verify the platform requirements and license checksum
+against the new release.
+
 Run the same checks as CI:
 
 ```sh
 brew style Formula/*.rb
-brew install ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web
+brew install ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web ferntrail/tap/hledger-flow
 brew test ferntrail/tap/bitgarth-cli
 brew test ferntrail/tap/bitgarth-web
+brew test ferntrail/tap/hledger-flow
 ```
 
 The web test starts a temporary instance on a random localhost port, checks
@@ -262,7 +290,7 @@ CI runs on Apple Silicon macOS and Ubuntu 24.04 x86-64.
 ## License and support
 
 BitGarth is licensed under the [GNU Affero General Public License, version 3 only](https://github.com/BitGarth/bitgarth/blob/main/LICENSE.md)
-(`AGPL-3.0-only`). Each formula installs the license from the corresponding release tag.
+(`AGPL-3.0-only`). hledger-flow uses the [GNU General Public License, version 3](https://github.com/apauley/hledger-flow/blob/v0.17.0/LICENSE). Each formula installs the license from the corresponding release tag.
 
 Use this repository's issues for packaging problems. Application information
 and support are at [bitgarth.app](https://bitgarth.app/).

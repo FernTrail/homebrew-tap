@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, ubuntu-24.04]
+        os: [macos-26, ubuntu-24.04]
     runs-on: ${{ matrix.os }}
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
@@ -28,10 +28,11 @@ jobs:
       - name: Check style
         run: brew style Formula/*.rb
       - name: Audit formulae
-        run: brew audit --strict ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web
+        run: brew audit --strict ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web ferntrail/tap/hledger-flow
       - name: Install packages
-        run: brew install ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web
+        run: brew install ferntrail/tap/bitgarth-cli ferntrail/tap/bitgarth-web ferntrail/tap/hledger-flow
       - name: Test packages
         run: |
           brew test ferntrail/tap/bitgarth-cli
           brew test ferntrail/tap/bitgarth-web
+          brew test ferntrail/tap/hledger-flow
