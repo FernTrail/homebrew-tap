@@ -88,7 +88,7 @@ executable, run `hledger-flow --hledger-path /absolute/path/to/hledger import`.
 
 ## Supported platforms
 
-**hledger-flow 0.18.0** installs the [upstream release binaries](https://github.com/apauley/hledger-flow/releases/tag/v0.18.0)
+**hledger-flow 0.19.0** installs the [upstream release binaries](https://github.com/apauley/hledger-flow/releases/tag/v0.19.0)
 for Apple Silicon (macOS 26 or newer), Intel Mac (macOS 15 or newer), and
 Linux on ARM64 or x86-64 (system glibc 2.34 or newer).
 
@@ -301,7 +301,7 @@ CI runs on Apple Silicon macOS and Ubuntu 24.04 x86-64.
 ## License and support
 
 BitGarth is licensed under the [GNU Affero General Public License, version 3 only](https://github.com/BitGarth/bitgarth/blob/main/LICENSE.md)
-(`AGPL-3.0-only`). hledger-flow uses the [GNU General Public License, version 3](https://github.com/apauley/hledger-flow/blob/v0.18.0/LICENSE). Each formula installs the license from the corresponding release tag.
+(`AGPL-3.0-only`). hledger-flow uses the [GNU General Public License, version 3](https://github.com/apauley/hledger-flow/blob/v0.19.0/LICENSE). Each formula installs the license from the corresponding release tag.
 
 Use this repository’s issues for packaging problems. For application help, see
 [BitGarth](https://bitgarth.app/) or the [hledger-flow quick-start guide](https://github.com/apauley/hledger-flow/blob/master/QUICKSTART.md).
