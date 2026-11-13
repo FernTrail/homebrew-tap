@@ -5,19 +5,19 @@ class HledgerFlow < Formula
 
   depends_on "hledger" => :recommended
 
-  tag = "v0.19.0"
+  tag = "v0.20.0"
   release = "https://github.com/apauley/hledger-flow/releases/download/#{tag}"
 
   on_macos do
     on_arm do
       url "#{release}/hledger-flow-macos-arm64.tar.gz"
-      sha256 "ed0d3c3af9eb4651859af126427981feabe2eeb8988055ef0c95a2209095ccd8"
+      sha256 "fda2bb8e44d7f34d44e719546f5f76d43a5e4ad27fb70a6cfcc6e6ead3412d49"
 
       depends_on macos: :tahoe
     end
     on_intel do
       url "#{release}/hledger-flow-macos-x64.tar.gz"
-      sha256 "28f235c09a9e7a7a17bd2270eedcb23044fc6e00f6f417d21b2f1f008b56d655"
+      sha256 "7617ff4b5a8a7f91676fea1045f614f7e412c2f1ffd529430da14230933fed65"
 
       depends_on macos: :sequoia
     end
@@ -26,11 +26,11 @@ class HledgerFlow < Formula
   on_linux do
     on_arm do
       url "#{release}/hledger-flow-linux-arm64.tar.gz"
-      sha256 "2cafcd6459d10154e3d1120b5650ea86e0e01ee32bdbc41a798a96fa562a484a"
+      sha256 "27b7f77f05f4aa19038fa483625abda35be84d732e8bbe9ea5e23d40e330dca5"
     end
     on_intel do
       url "#{release}/hledger-flow-linux-x64.tar.gz"
-      sha256 "3db7afd1bc71641a4b2e38365a76e3a8e6879fa0da48616d4ec91e28fcc884e3"
+      sha256 "245f706abb2053632004c900bfa982ba1000ef6f0eea2b7be22cc2a60be7c452"
     end
 
     depends_on "patchelf" => :build
