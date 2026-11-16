@@ -4,11 +4,11 @@ class BitgarthCli < Formula
   license "AGPL-3.0-only"
 
   if OS.mac?
-    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.4/bitgarth-cli-v0.4.4-macos-aarch64.tar.gz"
-    sha256 "6a5fd6acfb6a9f6b1718a313cb09d16c7fab2d92f47da87c0d3219dcad7e8746"
+    url "https://github.com/BitGarth/bitgarth/releases/download/v0.5.0/bitgarth-cli-v0.5.0-macos-aarch64.tar.gz"
+    sha256 "db61893b4bd136dd6a5f63bf32c37e39131947531e5d09fe65e2b20faa9c68f5"
   else
-    url "https://github.com/BitGarth/bitgarth/releases/download/v0.4.4/bitgarth-cli-v0.4.4-linux-x86_64-gnu.tar.gz"
-    sha256 "59e94996d1c4c202f4cb75a291ad0b122bb35500c5560df912984c12f651fef4"
+    url "https://github.com/BitGarth/bitgarth/releases/download/v0.5.0/bitgarth-cli-v0.5.0-linux-x86_64-gnu.tar.gz"
+    sha256 "d8097feb9ba318844a61fe15c87d91cf043a8d1458792e183d45a83152550bf4"
   end
 
   on_macos do
@@ -20,7 +20,7 @@ class BitgarthCli < Formula
   end
 
   resource "license" do
-    url "https://raw.githubusercontent.com/BitGarth/bitgarth/v0.4.4/LICENSE.md"
+    url "https://raw.githubusercontent.com/BitGarth/bitgarth/v0.5.0/LICENSE.md"
     sha256 "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
   end
 
@@ -43,12 +43,12 @@ class BitgarthCli < Formula
       or other methods listed at https://bitgarth.app/#install
 
       Pair with your BitGarth server:
-        bitgarth pair https://your-bitgarth.example.com/
+        bitgarth auth login https://your-bitgarth.example.com/
     EOS
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/bitgarth --version")
-    assert_match "pair", shell_output("#{bin}/bitgarth --help")
+    assert_match "bitgarth auth login", shell_output("#{bin}/bitgarth auth login --help")
   end
 end
